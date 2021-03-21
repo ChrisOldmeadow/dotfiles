@@ -252,7 +252,7 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -50'"
 
 
 alias ls="exa -la --color=always --group-directories-first"
-alias vim=nvim
+#alias vim=nvim
 alias mutt=neomutt
 alias sr="surfraw -browser=w3m"
 alias config="git --git-dir=/home/chris/dotfiles --work-tree=/home/chris"
