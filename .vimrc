@@ -1,5 +1,7 @@
 " BASIC SETUP:
 
+let mapleader = " "
+
 " enter the current millenium
 set nocompatible
 
@@ -50,49 +52,6 @@ map <C-l> <C-w>l
 set colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 
-" FINDING FILES:
-
-" Search down into subfolders
-" Provides tab-completion for all file-related tasks
-set path+=**
-
-" Display all matching files when we tab complete
-set wildmode=longest,list,full
-
-" NOW WE CAN:
-" - Hit tab to :find by partial match
-" - Use * to make it fuzzy
-
-" THINGS TO CONSIDER:
-" - :b lets you autocomplete any open buffer
-
-
-" TAG JUMPING:
-
-" Create the `tags` file (may need to install ctags first)
-command! MakeTags !ctags -R .
-
-" NOW WE CAN:
-" - Use ^] to jump to tag under cursor
-" - Use g^] for ambiguous tags
-" - Use ^t to jump back up the tag stack
-
-" THINGS TO CONSIDER:
-" - This doesn't help if you want a visual list of tags
-
-" AUTOCOMPLETE:
-
-" The good stuff is documented in |ins-completion|
-
-" HIGHLIGHTS:
-" - ^x^n for JUST this file
-" - ^x^f for filenames (works with our path trick!)
-" - ^x^] for tags only
-" - ^n for anything specified by the 'complete' option
-
-" NOW WE CAN:
-" - Use ^n and ^p to go back and forth in the suggestion list
-
 " FILE BROWSING:
 
 " Tweaks for browsing
@@ -108,14 +67,12 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 "  autocmd!
 "  autocmd VimEnter * :Vexplore
 "augroup END
-nnoremap <leader>dd :Lexplore %:p:h<CR> " open netrw in directory of current file
-nnoremap <Leader>da :Lexplore<CR> " open netrw in curretn working directory
-" NOW WE CAN:
-" - :edit a folder to open a file browser
-" - <CR>/v/t to open in an h-split/v-split/tab
-" - check |netrw-browse-maps| for more mappings
+nnoremap <leader>e :Lexplore<CR>
 
 
+" TERMINAL
+
+nnoremap <leader>t :term<CR>
 
 " SNIPPETS:
 
@@ -123,54 +80,40 @@ nnoremap <Leader>da :Lexplore<CR> " open netrw in curretn working directory
 nnoremap ,html :-1read $HOME/.vim/templates/skeleton.html<CR>3jwf>a
 nnoremap ,rmd :-1read $HOME/.vim/templates/rmarkdown.Rmd<CR>3jwf>a
 
-" NOW WE CAN:
-" - Take over the world!
-"   (with much fewer keystrokes)
-" assuming you want to use snipmate snippet engine
-
 
 " PLUGINS:
 "
 call plug#begin()
-        Plug 'vim-airline/vim-airline'
-        Plug 'vim-airline/vim-airline-themes'
-	Plug 'ncm2/ncm2'
-        Plug 'roxma/nvim-yarp'
-	Plug 'ncm2/ncm2-bufword'
-	Plug 'ncm2/ncm2-path'
-        Plug 'SirVer/ultisnips'
-        Plug 'ncm2/ncm2-ultisnips'
-	Plug 'honza/vim-snippets'
-	Plug 'vimwiki/vimwiki'
-	Plug 'jalvesaq/Nvim-R'
-	Plug 'gaalcaras/ncm-R'
-	"Plug 'w0rp/ale'
-        Plug 'bling/vim-bufferline'
-	Plug 'tpope/vim-fugitive'
-	Plug 'tpope/vim-eunuch'
-        Plug 'gruvbox-community/gruvbox'
-        Plug 'dracula/vim', { 'as': 'dracula' }
-	Plug 'MarcWeber/vim-addon-mw-utils'
-	Plug 'tomtom/tlib_vim'
-	Plug 'garbas/vim-snipmate'
-        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-        Plug 'junegunn/fzf.vim'
-        Plug 'jamessan/vim-gnupg'
-        Plug 'mattn/calendar-vim'
-        Plug 'https://github.com/ap/vim-css-color'
-"        Plug 'nvim-lua/popup.nvim'
-"        Plug 'nvim-lua/plenary.nvim'
-"        Plug 'nvim-telescope/telescope.nvim'
-        Plug 'mhinz/vim-startify'
-        Plug 'tpope/vim-commentary'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'roxma/nvim-yarp'
+Plug 'honza/vim-snippets'
+Plug 'vimwiki/vimwiki'
+Plug 'jalvesaq/Nvim-R'
+Plug 'gaalcaras/ncm-R'
+Plug 'w0rp/ale'
+Plug 'bling/vim-bufferline'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-eunuch'
+Plug 'gruvbox-community/gruvbox'
+Plug 'dracula/vim', { 'as': 'dracula' }
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'garbas/vim-snipmate'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'jamessan/vim-gnupg'
+Plug 'mattn/calendar-vim'
+Plug 'https://github.com/ap/vim-css-color'
+Plug 'mhinz/vim-startify'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-sensible'
 call plug#end()
 
 
 " airline config
 let g:airline_detect_spell=1
 let g:airline_detect_iminsert=0
-
-
 let g:airline#extensions#tabline#show_tab_nr = 1
 let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
 let g:airline#extensions#tabline#tabnr_formatter = 'tabnr'
@@ -186,10 +129,10 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 
 
 " Ultisnp options
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsJumpForwardTrigger="<c-j>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+"let g:UltiSnipsSnippetDirectories=[$HOME.'/.vim/UltiSnips']
 
 
 " SnipMate legacy parser
@@ -205,7 +148,7 @@ endif
 let g:gruvbox_invert_selection='0'
 
 colorscheme gruvbox
-"set background=dark
+set background=dark
 "highlight Normal guibg=none
 
 " Ale options
@@ -308,10 +251,6 @@ endfunction
 nmap <Leader>wa :call VimwikiFindAllIncompleteTasks()<CR>
 nmap <Leader>wx :call VimwikiFindIncompleteTasks()<CR>
 
-" NCM2
-autocmd BufEnter * call ncm2#enable_for_buffer()    " To enable ncm2 for all buffers.
-set completeopt=noinsert,menuone,noselect           " :help Ncm2PopupOpen for more
-let g:ncm2#auto_popup = 1
 
 " information
 " Vim-gnugpg and encrypted vimwiki pages
@@ -324,13 +263,6 @@ let g:fzf_layout = { 'window': { 'width': 0.8, 'height': 0.8 } }
 nnoremap <Leader>f :Files<CR>
 nnoremap <Leader>b :Buffers<CR>
 nnoremap <Leader>g :Rg<CR>
-
-" telescope
-" Find files using Telescope command-line sugar.
-" nnoremap <leader>ff <cmd>Telescope find_files<cr>
-" nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-" nnoremap <leader>fb <cmd>Telescope buffers<cr>
-" nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 
 " navigating buffers
@@ -359,4 +291,3 @@ nnoremap <silent> ]L :llast<CR>
 
 nnoremap <space>/ :Commentary<CR>
 vnoremap <space>/ :Commentary<CR>
-
