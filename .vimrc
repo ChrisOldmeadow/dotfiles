@@ -67,19 +67,6 @@ set wildmode=longest,list,full
 " - :b lets you autocomplete any open buffer
 
 
-" TAG JUMPING:
-
-" Create the `tags` file (may need to install ctags first)
-command! MakeTags !ctags -R .
-
-" NOW WE CAN:
-" - Use ^] to jump to tag under cursor
-" - Use g^] for ambiguous tags
-" - Use ^t to jump back up the tag stack
-
-" THINGS TO CONSIDER:
-" - This doesn't help if you want a visual list of tags
-
 " AUTOCOMPLETE:
 
 " The good stuff is documented in |ins-completion|
@@ -108,12 +95,7 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 "  autocmd!
 "  autocmd VimEnter * :Vexplore
 "augroup END
-nnoremap <leader>dd :Lexplore %:p:h<CR> " open netrw in directory of current file
-nnoremap <Leader>da :Lexplore<CR> " open netrw in curretn working directory
-" NOW WE CAN:
-" - :edit a folder to open a file browser
-" - <CR>/v/t to open in an h-split/v-split/tab
-" - check |netrw-browse-maps| for more mappings
+nnoremap <leader>ff :Lexplore %:p:h<CR> " open netrw in directory of current file
 
 
 
@@ -134,17 +116,13 @@ nnoremap ,rmd :-1read $HOME/.vim/templates/rmarkdown.Rmd<CR>3jwf>a
 call plug#begin()
         Plug 'vim-airline/vim-airline'
         Plug 'vim-airline/vim-airline-themes'
-	Plug 'ncm2/ncm2'
-        Plug 'roxma/nvim-yarp'
-	Plug 'ncm2/ncm2-bufword'
-	Plug 'ncm2/ncm2-path'
         Plug 'SirVer/ultisnips'
         Plug 'ncm2/ncm2-ultisnips'
 	Plug 'honza/vim-snippets'
 	Plug 'vimwiki/vimwiki'
 	Plug 'jalvesaq/Nvim-R'
 	Plug 'gaalcaras/ncm-R'
-	"Plug 'w0rp/ale'
+	Plug 'w0rp/ale'
         Plug 'bling/vim-bufferline'
 	Plug 'tpope/vim-fugitive'
 	Plug 'tpope/vim-eunuch'
@@ -158,9 +136,6 @@ call plug#begin()
         Plug 'jamessan/vim-gnupg'
         Plug 'mattn/calendar-vim'
         Plug 'https://github.com/ap/vim-css-color'
-"        Plug 'nvim-lua/popup.nvim'
-"        Plug 'nvim-lua/plenary.nvim'
-"        Plug 'nvim-telescope/telescope.nvim'
         Plug 'mhinz/vim-startify'
         Plug 'tpope/vim-commentary'
 call plug#end()
@@ -205,7 +180,7 @@ endif
 let g:gruvbox_invert_selection='0'
 
 colorscheme gruvbox
-"set background=dark
+set background=dark
 "highlight Normal guibg=none
 
 " Ale options
@@ -245,12 +220,7 @@ let g:ale_linters = {
 " remmaping so Esc works to go back to normal mode in terminal
 tnoremap <Esc> <C-\><C-n>
 
-" nvim-r options
-let R_term = 'st'
-let R_assign = 0
 
-autocmd FileType r if string(g:SendCmdToR) == "function('SendCmdToR_fake')" | call StartR("R") | endif
-autocmd FileType rmd if string(g:SendCmdToR) == "function('SendCmdToR_fake')" | call StartR("R") | endif
 autocmd VimLeave * if exists("g:SendCmdToR") && string(g:SendCmdToR) != "function('SendCmdToR_fake')" | call RQuit("nosave") | endif
 au BufRead,BufNewFile *.R set filetype=r
 
@@ -308,10 +278,6 @@ endfunction
 nmap <Leader>wa :call VimwikiFindAllIncompleteTasks()<CR>
 nmap <Leader>wx :call VimwikiFindIncompleteTasks()<CR>
 
-" NCM2
-autocmd BufEnter * call ncm2#enable_for_buffer()    " To enable ncm2 for all buffers.
-set completeopt=noinsert,menuone,noselect           " :help Ncm2PopupOpen for more
-let g:ncm2#auto_popup = 1
 
 " information
 " Vim-gnugpg and encrypted vimwiki pages
