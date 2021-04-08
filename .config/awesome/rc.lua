@@ -22,6 +22,12 @@ require("awful.hotkeys_popup.keys")
 local vicious = require("vicious")
 
 
+-- Quake
+local lain = require("lain")
+local quake = require("utils/quake")
+-- Enabling drop down terminal
+--local scratch = require("scratch")
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -113,7 +119,7 @@ wp_timer:start()
 
 
 -- This is used later as the default terminal and editor to run.
-terminal = "st"
+terminal = "alacritty"
 editor = os.getenv("EDITOR") or "nvim"
 editor_cmd = terminal .. " -e " .. editor
 
@@ -126,10 +132,10 @@ local modkey       = "Mod4"
 local altkey       = "Mod1"
 local modkey1      = "Control"
 
--- Comppsiting
+-- Compositing
 client.connect_signal("focus", function(c)
                               c.border_color = beautiful.border_focus
-                              c.opacity = 1
+                              c.opacity = 0.99
                            end)
 client.connect_signal("unfocus", function(c)
                                 c.border_color = beautiful.border_normal
@@ -240,9 +246,21 @@ local tasklist_buttons = gears.table.join(
 
 awful.screen.connect_for_each_screen(function(s)
 
+    s.quake = quake({ app = "alacritty",
+      argname = "--title %s",
+      extra = "--class QuakeDD -e tmux",
+      visible = true, horiz = "center", width = 0.5, height = 0.4 }),
     -- Each screen has its own tag table.
-    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    --awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
 
+    --awful.tag.add( {icon="", name="Home", screen = s})
+    --awful.tag.add({ icon="", name="Web", screen = s})
+    --awful.tag.add({icon="", name="Files", screen = s})
+    --awful.tag.add({icon="", name="Dev", screen = s})
+    --awful.tag.add({icon="",name="Mail", screen = s})
+    --awful.tag.add({icon="",name="RSS", screen = s})
+    awful.tag({ "", "", "", "", "5", "6", "7", "", "9"}, s, awful.layout.layouts[1])
+    --theme.taglist_font="JetBrains Mono 12"
     -- Create a promptbox for each screen
     s.mypromptbox = awful.widget.prompt()
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
@@ -597,7 +615,7 @@ awful.rules.rules = {
      { rule = { class = "Brave" },
        properties = { screen = 1, tag = "2" } },
      { rule = { name = "newsboat" },
-       properties = { screen = 1, tag = "9", maximized = true } },
+       properties = { screen = 1, tag = "9", maximized = true} },
      { rule = { name = "neomutt" },
        properties = { screen = 1, tag = "8", maximized = true } },
      { rule = { name = "ncmpcpp" },
@@ -684,6 +702,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 -- }}}
 
 
+awful.spawn.with_shell("compton")
 awful.spawn.with_shell("nm-applet")
 awful.spawn.with_shell("volumeicon")
 awful.spawn.with_shell("nextcloud")

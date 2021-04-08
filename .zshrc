@@ -19,7 +19,7 @@ export ZSH=/usr/share/oh-my-zsh/
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-z calc)
+plugins=(git zsh-z calc zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -47,7 +47,7 @@ export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 ####   ARCOLINUX SETTINGS   ####
 
 
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+#source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 setopt GLOB_DOTS
 
@@ -260,3 +260,4 @@ alias config="git --git-dir=/home/chris/dotfiles --work-tree=/home/chris"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+

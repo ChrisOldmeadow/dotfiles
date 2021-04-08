@@ -201,7 +201,7 @@ highlight article "\\[image\\ [0-9]+\\]" green default
 # written to) this file, using http://www.cookiecentral.com/faq/#3.5[Netscape
 # format].
 #
-# Syntax: <path>
+# "~YOUTUBE: TJ Devires" Syntax: <path>
 #
 # Default value: ""
 #
@@ -1590,9 +1590,9 @@ bind-key h quit
 #
 # user-agent "Lynx/2.8.5rel.1 libwww-FM/2.14"
 
-macro v set browser "mpv"; open-in-browser ; set browser "firefox %u";
+macro v set browser "mpv"; open-in-browser ; set browser "brave %u";
 
-macro r set browser "rtv"; open-in-browser ; toggle-article-read ; set browser open
+macro r set browser "tuir"; open-in-browser ; toggle-article-read ; set browser open
 
 
 bind-key U show-urls
