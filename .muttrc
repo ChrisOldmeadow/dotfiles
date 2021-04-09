@@ -146,8 +146,6 @@ mono indicator reverse
 bind pager g noop
 bind pager G noop
 bind index G noop
-bind pager d noop
-bind index d noop
 bind generic,index,pager \Cf       next-page
 bind generic,index,pager \Cb       previous-page
 bind generic             gg        first-entry
