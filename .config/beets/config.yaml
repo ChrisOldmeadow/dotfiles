@@ -1,0 +1,10 @@
+directory: ~/Music
+library: ~/.config/beets/musiclibrary.db
+import:
+    move: yes
+plugins: chroma fromfilename fetchart lastgenre mpdstats mpdupdate ydl bandcamp
+fetchart:
+    sources: itunes *
+lastgenre:
+    canonical: yes
+    count: 2
