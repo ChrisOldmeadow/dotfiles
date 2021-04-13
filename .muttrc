@@ -143,14 +143,12 @@ mono indicator reverse
 
 # Keybindings
 # some sane vim-like keybindings
-bind pager g noop
 bind pager G noop
 bind index G noop
 bind generic,index,pager \Cf       next-page
 bind generic,index,pager \Cb       previous-page
 bind generic             gg        first-entry
 bind generic,index       G         last-entry
-bind pager               gg        top
 bind pager               G         bottom
 bind index,pager k previous-entry
 bind index,pager j next-entry
