@@ -52,38 +52,7 @@ map <C-l> <C-w>l
 set colorcolumn=80
 highlight ColorColumn ctermbg=0 guibg=lightgrey
 
-<<<<<<< HEAD
-" FINDING FILES:
 
-" Search down into subfolders
-" Provides tab-completion for all file-related tasks
-set path+=**
-
-" Display all matching files when we tab complete
-set wildmode=longest,list,full
-
-" NOW WE CAN:
-" - Hit tab to :find by partial match
-" - Use * to make it fuzzy
-
-" THINGS TO CONSIDER:
-" - :b lets you autocomplete any open buffer
-
-
-" AUTOCOMPLETE:
-
-" The good stuff is documented in |ins-completion|
-
-" HIGHLIGHTS:
-" - ^x^n for JUST this file
-" - ^x^f for filenames (works with our path trick!)
-" - ^x^] for tags only
-" - ^n for anything specified by the 'complete' option
-
-" NOW WE CAN:
-" - Use ^n and ^p to go back and forth in the suggestion list
-
-||||||| cd9ec73
 " FINDING FILES:
 
 " Search down into subfolders
@@ -127,8 +96,6 @@ command! MakeTags !ctags -R .
 " NOW WE CAN:
 " - Use ^n and ^p to go back and forth in the suggestion list
 
-=======
->>>>>>> f48f00629b762c4ffe021a6ac2cd6f3b4e888998
 " FILE BROWSING:
 
 " Tweaks for browsing
@@ -144,20 +111,13 @@ let g:netrw_list_hide.=',\(^\|\s\s\)\zs\.\S\+'
 "  autocmd!
 "  autocmd VimEnter * :Vexplore
 "augroup END
-<<<<<<< HEAD
-nnoremap <leader>ff :Lexplore %:p:h<CR> " open netrw in directory of current file
-||||||| cd9ec73
 nnoremap <leader>dd :Lexplore %:p:h<CR> " open netrw in directory of current file
 nnoremap <Leader>da :Lexplore<CR> " open netrw in curretn working directory
 " NOW WE CAN:
 " - :edit a folder to open a file browser
 " - <CR>/v/t to open in an h-split/v-split/tab
 " - check |netrw-browse-maps| for more mappings
-=======
 nnoremap <leader>e :Lexplore<CR>
-
->>>>>>> f48f00629b762c4ffe021a6ac2cd6f3b4e888998
-
 " TERMINAL
 
 nnoremap <leader>t :term<CR>
@@ -172,75 +132,18 @@ nnoremap ,rmd :-1read $HOME/.vim/templates/rmarkdown.Rmd<CR>3jwf>a
 " PLUGINS:
 "
 call plug#begin()
-<<<<<<< HEAD
-        Plug 'vim-airline/vim-airline'
-        Plug 'vim-airline/vim-airline-themes'
-        Plug 'SirVer/ultisnips'
-        Plug 'ncm2/ncm2-ultisnips'
-	Plug 'honza/vim-snippets'
-	Plug 'vimwiki/vimwiki'
-	Plug 'jalvesaq/Nvim-R'
-	Plug 'gaalcaras/ncm-R'
-	Plug 'w0rp/ale'
-        Plug 'bling/vim-bufferline'
-	Plug 'tpope/vim-fugitive'
-	Plug 'tpope/vim-eunuch'
-        Plug 'gruvbox-community/gruvbox'
-        Plug 'dracula/vim', { 'as': 'dracula' }
-	Plug 'MarcWeber/vim-addon-mw-utils'
-	Plug 'tomtom/tlib_vim'
-	Plug 'garbas/vim-snipmate'
-        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-        Plug 'junegunn/fzf.vim'
-        Plug 'jamessan/vim-gnupg'
-        Plug 'mattn/calendar-vim'
-        Plug 'https://github.com/ap/vim-css-color'
-        Plug 'mhinz/vim-startify'
-        Plug 'tpope/vim-commentary'
-||||||| cd9ec73
-        Plug 'vim-airline/vim-airline'
-        Plug 'vim-airline/vim-airline-themes'
-	Plug 'ncm2/ncm2'
-        Plug 'roxma/nvim-yarp'
-	Plug 'ncm2/ncm2-bufword'
-	Plug 'ncm2/ncm2-path'
-        Plug 'SirVer/ultisnips'
-        Plug 'ncm2/ncm2-ultisnips'
-	Plug 'honza/vim-snippets'
-	Plug 'vimwiki/vimwiki'
-	Plug 'jalvesaq/Nvim-R'
-	Plug 'gaalcaras/ncm-R'
-	"Plug 'w0rp/ale'
-        Plug 'bling/vim-bufferline'
-	Plug 'tpope/vim-fugitive'
-	Plug 'tpope/vim-eunuch'
-        Plug 'gruvbox-community/gruvbox'
-        Plug 'dracula/vim', { 'as': 'dracula' }
-	Plug 'MarcWeber/vim-addon-mw-utils'
-	Plug 'tomtom/tlib_vim'
-	Plug 'garbas/vim-snipmate'
-        Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-        Plug 'junegunn/fzf.vim'
-        Plug 'jamessan/vim-gnupg'
-        Plug 'mattn/calendar-vim'
-        Plug 'https://github.com/ap/vim-css-color'
-"        Plug 'nvim-lua/popup.nvim'
-"        Plug 'nvim-lua/plenary.nvim'
-"        Plug 'nvim-telescope/telescope.nvim'
-        Plug 'mhinz/vim-startify'
-        Plug 'tpope/vim-commentary'
-=======
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'ncm2/ncm2'
 Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+Plug 'SirVer/ultisnips'
+Plug 'ncm2/ncm2-ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vimwiki/vimwiki'
 Plug 'jalvesaq/Nvim-R'
 Plug 'gaalcaras/ncm-R'
-Plug 'w0rp/ale'
+"Plug 'w0rp/ale'
 Plug 'bling/vim-bufferline'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-eunuch'
 Plug 'gruvbox-community/gruvbox'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'MarcWeber/vim-addon-mw-utils'
@@ -253,8 +156,14 @@ Plug 'mattn/calendar-vim'
 Plug 'https://github.com/ap/vim-css-color'
 Plug 'mhinz/vim-startify'
 Plug 'tpope/vim-commentary'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'vimwiki/vimwiki'
+Plug 'w0rp/ale'
+Plug 'bling/vim-bufferline'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-sensible'
->>>>>>> f48f00629b762c4ffe021a6ac2cd6f3b4e888998
 call plug#end()
 
 
