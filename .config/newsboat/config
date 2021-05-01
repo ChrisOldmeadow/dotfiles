@@ -136,7 +136,7 @@
 # Default value: %BROWSER, otherwise lynx
 #
  #browser "w3m %u -T text/html -dump | less"
- browser "reader %u"
+ browser "reader '%u'"
 
 ####  cache-file
 #
