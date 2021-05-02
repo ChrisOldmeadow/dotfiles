@@ -1,0 +1,146 @@
+#+TITLE: Zsh Config
+#+PROPERTY: header-args :tangle zshrc
+
+* Table of contents :toc:
+- [[#about-this-config][About this config]]
+- [[#general-options][General options]]
+- [[#completions][completions]]
+- [[#colors][Colors]]
+- [[#import-files][Import files]]
+- [[#plugins][Plugins]]
+- [[#key-bindings][Key-bindings]]
+- [[#exports][Exports]]
+- [[#history--configuration][History  configuration]]
+
+* About this config
+
+A modular config for Zsh
+
+* General options
+
+#+BEGIN_SRC shell
+setopt autocd extendedglob nomatch menucomplete
+setopt interactive_comments
+stty stop undef    # Disable ctrl-s to freeze terminal.
+zle_highlight=('paste:none')
+unsetopt BEEP
+#+END_SRC
+
+* completions
+
+
+#+begin_src shell
+autoload -Uz compinit
+zstyle ':completion:*' menu select
+# zstyle ':completion::complete:lsof:*' menu yes select
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)		# Include hidden files.
+
+autoload -U up-line-or-beginning-search
+autoload -U down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+
+#+end_src
+
+
+* Colors
+
+
+#+begin_src shell
+autoload -Uz colors && colors
+#+end_src
+
+* Import files
+
+
+#+begin_src shell
+# Useful Functions
+source "/home/chris/.config/zsh/zsh-functions"
+
+# Normal files to source
+zsh_add_file "zsh-exports"
+zsh_add_file "zsh-vim-mode"
+zsh_add_file "zsh-aliases"
+zsh_add_file "zsh-prompt"
+
+#+end_src
+
+
+* Plugins
+
+
+#+begin_src shell
+zsh_add_plugin "zsh-users/zsh-autosuggestions"
+zsh_add_plugin "zsh-users/zsh-syntax-highlighting"
+zsh_add_plugin "zsh-users/zsh-completions"
+fpath=(/home/chris/.config/zsh/plugins/zsh-completions/src $fpath)
+
+# For more plugins: https://github.com/unixorn/awesome-zsh-plugins
+# More completions https://github.com/zsh-users/zsh-completions
+
+#+end_src
+
+* Key-bindings
+
+#+begin_src shell
+bindkey -s '^f' 'ranger\n'
+#bindkey -s '^f' 'zi\n'
+#bindkey -s '^s' 'ncdu\n'
+bindkey -s '^v' 'nvim\n'
+#bindkey -s '^z' 'zi\n'
+#bindkey '^[[P' delete-char
+#bindkey "^p" up-line-or-beginning-search # Up
+#bindkey "^n" down-line-or-beginning-search # Down
+
+
+# Edit line in vim with ctrl-e:
+autoload edit-command-line; zle -N edit-command-line
+bindkey '^e' edit-command-line
+#+end_src
+
+* Exports
+#+begin_src shell
+# If you come from bash you might have to change your $PATH.
+export PATH=/home/chris/.gem/ruby/2.7.0/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+
+
+# better man
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
+
+export EDITOR='nvim'
+
+
+export FZF_DEFAULT_COMMAND='fd --type f --color=never --hidden'
+export FZF_DEFAULT_OPTS='--no-height --color=bg+:#343d46,gutter:-1,pointer:#ff3c3c,info:#0dbc79,hl:#0dbc79,hl+:#23d18b'
+
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :50 {}'"
+
+export FZF_ALT_C_COMMAND='fd --type d . --color=never --hidden'
+export FZF_ALT_C_OPTS="--preview 'tree -C {} | head -50'"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[[ -r "/usr/share/z/z.sh" ]] && source /usr/share/z/z.sh
+#+end_src
+
+
+
+* History  configuration
+
+#+begin_src shell
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=10000
+
+setopt extended_history       # record timestamp of command in HISTFILE
+setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt hist_ignore_dups       # ignore duplicated commands history list
+setopt hist_ignore_space      # ignore commands that start with space
+setopt hist_verify            # show command with history expansion to user before running it
+setopt inc_append_history     # add commands to HISTFILE in order of execution
+setopt share_history # share command history data
+#+end_src
