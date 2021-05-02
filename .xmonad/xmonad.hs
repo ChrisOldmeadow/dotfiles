@@ -1,12 +1,3 @@
--- xmonad.hs
--- xmonad example config file.
---
--- A template showing all available configuration hooks,
--- and how to override the defaults in your own xmonad.hs conf file.
---
--- Normally, you'd only override those defaults you care about.
---
-
 import XMonad
 import System.Exit
 import Graphics.X11.ExtraTypes.XF86
@@ -52,6 +43,7 @@ import XMonad.Actions.MouseResize
 import XMonad.Util.Run 
 import XMonad.Util.SpawnOnce 
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
+
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
@@ -105,11 +97,6 @@ clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
 myNormalBorderColor  = "#dddddd"
 myFocusedBorderColor = "#ff0000"
 
-
-
-
-
-
 -- Startup programs
 myStartupHook :: X ()
 myStartupHook = do
@@ -119,9 +106,207 @@ myStartupHook = do
     spawnOnce "nextcloud &"
     spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34  --height 22 &"
     spawnOnce "feh --bg-fill --randomize /data/Pictures/wallpapers/* &"
-------------------------------------------------------------------------
--- Key bindings. Add, modify or remove key bindings here.
+
+mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
+
+-- Below is a variation of the above except no borders are applied
+-- if fewer than two windows. So a single window has no gaps.
+mySpacing' :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
+mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
+-- Defining a bunch of layouts, many that I don't use.
+-- limitWindows n sets maximum number of windows displayed for layout.
+-- mySpacing n sets the gap size around the windows.
+tall     = renamed [Replace "tall"]
+           $ smartBorders
+           $ addTabs shrinkText myTabTheme
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 12
+           $ mySpacing 8
+           $ ResizableTall 1 (3/100) (1/2) []
+magnify  = renamed [Replace "magnify"]
+           $ smartBorders
+           $ addTabs shrinkText myTabTheme
+           $ subLayout [] (smartBorders Simplest)
+           $ magnifier
+           $ limitWindows 12
+           $ mySpacing 8
+           $ ResizableTall 1 (3/100) (1/2) []
+monocle  = renamed [Replace "monocle"]
+           $ smartBorders
+           $ addTabs shrinkText myTabTheme
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 20 Full
+floats   = renamed [Replace "floats"]
+           $ smartBorders
+           $ limitWindows 20 simplestFloat
+grid     = renamed [Replace "grid"]
+           $ smartBorders
+           $ addTabs shrinkText myTabTheme
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 12
+           $ mySpacing 8
+           $ mkToggle (single MIRROR)
+           $ Grid (16/10)
+spirals  = renamed [Replace "spirals"]
+           $ smartBorders
+           $ addTabs shrinkText myTabTheme
+           $ subLayout [] (smartBorders Simplest)
+           $ mySpacing' 8
+           $ spiral (6/7)
+threeCol = renamed [Replace "threeCol"]
+           $ smartBorders
+           $ addTabs shrinkText myTabTheme
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 7
+           $ ThreeCol 1 (3/100) (1/2)
+threeRow = renamed [Replace "threeRow"]
+           $ smartBorders
+           $ addTabs shrinkText myTabTheme
+           $ subLayout [] (smartBorders Simplest)
+           $ limitWindows 7
+           -- Mirror takes a layout and rotates it by 90 degrees.
+           -- So we are applying Mirror to the ThreeCol layout.
+           $ Mirror
+           $ ThreeCol 1 (3/100) (1/2)
+tabs     = renamed [Replace "tabs"]
+           -- I cannot add spacing to this layout because it will
+           -- add spacing between window and tabs which looks bad.
+           $ tabbed shrinkText myTabTheme
+tallAccordion  = renamed [Replace "tallAccordion"]
+           $ Accordion
+wideAccordion  = renamed [Replace "wideAccordion"]
+           $ Mirror Accordion
 --
+--
+-- setting colors for tabs layout and tabs sublayout.
+myTabTheme = def { fontName            = myFont
+                 , activeColor         = "#46d9ff"
+                 , inactiveColor       = "#313846"
+                 , activeBorderColor   = "#46d9ff"
+                 , inactiveBorderColor = "#282c34"
+                 , activeTextColor     = "#282c34"
+                 , inactiveTextColor   = "#d0d0d0"
+                 }--
+--
+-- You can specify and transform your layouts by modifying these values.
+-- If you change layout bindings be sure to use 'mod-shift-space' after
+-- restarting (with 'mod-q') to reset your layout state to the new
+-- defaults, as xmonad preserves your old layout settings by default.
+--
+-- The available layouts.  Note that each layout is separated by |||,
+-- which denotes layout choice.
+--
+-- The layout hook
+myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
+               $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
+             where
+               myDefaultLayout =     withBorder myBorderWidth tall
+                                 ||| magnify
+                                 ||| noBorders monocle
+                                 ||| floats
+                                 ||| noBorders tabs
+                                 ||| grid
+                                 ||| spirals
+                                 ||| threeCol
+                                 ||| threeRow
+                                 ||| tallAccordion
+                                 ||| wideAccordion
+------------------------------------------------------------------------
+
+-- Window rules:
+
+-- Execute arbitrary actions and WindowSet manipulations when managing
+-- a new window. You can use this to, for example, always float a
+-- particular program, or have a client always appear on a particular
+-- workspace.
+--
+-- To find the property name associated with a program, use
+-- > xprop | grep WM_CLASS
+-- and click on the client you're interested in.
+--
+-- To match on the WM_NAME, you can use 'title' in the same way that
+-- 'className' and 'resource' are used below.
+--
+myManageHook = composeAll . concat $
+    [ [isDialog --> doCenterFloat]
+    , [className =? c --> doCenterFloat | c <- myCFloats]
+    , [title =? t --> doFloat | t <- myTFloats]
+    , [resource =? r --> doFloat | r <- myRFloats]
+    , [resource =? i --> doIgnore | i <- myIgnores]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61612" | x <- my1Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61899" | x <- my2Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61947" | x <- my3Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61635" | x <- my4Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61502" | x <- my5Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61501" | x <- my6Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61705" | x <- my7Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61564" | x <- my8Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\62150" | x <- my9Shifts]
+  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61872" | x <- my10Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "1" | x <- my1Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "2" | x <- my2Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "3" | x <- my3Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "4" | x <- my4Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "5" | x <- my5Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "6" | x <- my6Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "7" | x <- my7Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "8" | x <- my8Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "9" | x <- my9Shifts]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "10" | x <- my10Shifts]
+    ]
+    where
+    doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
+    myCFloats = ["Arandr", "feh", "mpv", "Zathura", "confirm", "dialog", "download", "error", "notification", "splash", "tollbar"]
+    myTFloats = ["Downloads", "Save As..."]
+    myRFloats = []
+    myIgnores = ["desktop_window"]
+    my1Shifts = ["brave-browser"]
+    my2Shifts = ["Emacs"]
+    my3Shifts = ["Thunar", "ranger"]
+    my4Shifts = []
+    my5Shifts = []
+    my6Shifts = ["tuir"]
+    my7Shifts = ["ncmpcpp"]
+    my8Shifts = ["neomutt"]
+    my9Shifts = ["newsboat"]
+    my10Shifts = []
+
+
+myTabTheme = def { fontName            = myFont
+                 , activeColor         = "#46d9ff"
+                 , inactiveColor       = "#313846"
+                 , activeBorderColor   = "#46d9ff"
+                 , inactiveBorderColor = "#282c34"
+                 , activeTextColor     = "#282c34"
+                 , inactiveTextColor   = "#d0d0d0"
+                 }--
+--
+-- You can specify and transform your layouts by modifying these values.
+-- If you change layout bindings be sure to use 'mod-shift-space' after
+-- restarting (with 'mod-q') to reset your layout state to the new
+-- defaults, as xmonad preserves your old layout settings by default.
+--
+-- The available layouts.  Note that each layout is separated by |||,
+-- which denotes layout choice.
+--
+-- The layout hook
+myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
+               $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
+             where
+               myDefaultLayout =     withBorder myBorderWidth tall
+                                 ||| magnify
+                                 ||| noBorders monocle
+                                 ||| floats
+                                 ||| noBorders tabs
+                                 ||| grid
+                                 ||| spirals
+                                 ||| threeCol
+                                 ||| threeRow
+                                 ||| tallAccordion
+                                 ||| wideAccordion
+-
+
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
   [
@@ -281,214 +466,6 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
-------------------------------------------------------------------------
--- Layouts:
---
---
---Makes setting the spacingRaw simpler to write. The spacingRaw module adds a configurable amount of space around windows.
-mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
-mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
-
--- Below is a variation of the above except no borders are applied
--- if fewer than two windows. So a single window has no gaps.
-mySpacing' :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
-mySpacing' i = spacingRaw True (Border i i i i) True (Border i i i i) True
--- Defining a bunch of layouts, many that I don't use.
--- limitWindows n sets maximum number of windows displayed for layout.
--- mySpacing n sets the gap size around the windows.
-tall     = renamed [Replace "tall"]
-           $ smartBorders
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 12
-           $ mySpacing 8
-           $ ResizableTall 1 (3/100) (1/2) []
-magnify  = renamed [Replace "magnify"]
-           $ smartBorders
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ magnifier
-           $ limitWindows 12
-           $ mySpacing 8
-           $ ResizableTall 1 (3/100) (1/2) []
-monocle  = renamed [Replace "monocle"]
-           $ smartBorders
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 20 Full
-floats   = renamed [Replace "floats"]
-           $ smartBorders
-           $ limitWindows 20 simplestFloat
-grid     = renamed [Replace "grid"]
-           $ smartBorders
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 12
-           $ mySpacing 8
-           $ mkToggle (single MIRROR)
-           $ Grid (16/10)
-spirals  = renamed [Replace "spirals"]
-           $ smartBorders
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ mySpacing' 8
-           $ spiral (6/7)
-threeCol = renamed [Replace "threeCol"]
-           $ smartBorders
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 7
-           $ ThreeCol 1 (3/100) (1/2)
-threeRow = renamed [Replace "threeRow"]
-           $ smartBorders
-           $ addTabs shrinkText myTabTheme
-           $ subLayout [] (smartBorders Simplest)
-           $ limitWindows 7
-           -- Mirror takes a layout and rotates it by 90 degrees.
-           -- So we are applying Mirror to the ThreeCol layout.
-           $ Mirror
-           $ ThreeCol 1 (3/100) (1/2)
-tabs     = renamed [Replace "tabs"]
-           -- I cannot add spacing to this layout because it will
-           -- add spacing between window and tabs which looks bad.
-           $ tabbed shrinkText myTabTheme
-tallAccordion  = renamed [Replace "tallAccordion"]
-           $ Accordion
-wideAccordion  = renamed [Replace "wideAccordion"]
-           $ Mirror Accordion
---
---
--- setting colors for tabs layout and tabs sublayout.
-myTabTheme = def { fontName            = myFont
-                 , activeColor         = "#46d9ff"
-                 , inactiveColor       = "#313846"
-                 , activeBorderColor   = "#46d9ff"
-                 , inactiveBorderColor = "#282c34"
-                 , activeTextColor     = "#282c34"
-                 , inactiveTextColor   = "#d0d0d0"
-                 }--
---
--- You can specify and transform your layouts by modifying these values.
--- If you change layout bindings be sure to use 'mod-shift-space' after
--- restarting (with 'mod-q') to reset your layout state to the new
--- defaults, as xmonad preserves your old layout settings by default.
---
--- The available layouts.  Note that each layout is separated by |||,
--- which denotes layout choice.
---
--- The layout hook
-myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
-               $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) myDefaultLayout
-             where
-               myDefaultLayout =     withBorder myBorderWidth tall
-                                 ||| magnify
-                                 ||| noBorders monocle
-                                 ||| floats
-                                 ||| noBorders tabs
-                                 ||| grid
-                                 ||| spirals
-                                 ||| threeCol
-                                 ||| threeRow
-                                 ||| tallAccordion
-                                 ||| wideAccordion
-------------------------------------------------------------------------
--- Window rules:
-
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
---
--- To match on the WM_NAME, you can use 'title' in the same way that
--- 'className' and 'resource' are used below.
---
-myManageHook = composeAll . concat $
-    [ [isDialog --> doCenterFloat]
-    , [className =? c --> doCenterFloat | c <- myCFloats]
-    , [title =? t --> doFloat | t <- myTFloats]
-    , [resource =? r --> doFloat | r <- myRFloats]
-    , [resource =? i --> doIgnore | i <- myIgnores]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61612" | x <- my1Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61899" | x <- my2Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61947" | x <- my3Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61635" | x <- my4Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61502" | x <- my5Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61501" | x <- my6Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61705" | x <- my7Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61564" | x <- my8Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\62150" | x <- my9Shifts]
-  --  , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "\61872" | x <- my10Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "1" | x <- my1Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "2" | x <- my2Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "3" | x <- my3Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "4" | x <- my4Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "5" | x <- my5Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "6" | x <- my6Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "7" | x <- my7Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "8" | x <- my8Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "9" | x <- my9Shifts]
-    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "10" | x <- my10Shifts]
-    ]
-    where
-    doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
-    myCFloats = ["Arandr", "feh", "mpv", "Zathura", "confirm", "dialog", "download", "error", "notification", "splash", "tollbar"]
-    myTFloats = ["Downloads", "Save As..."]
-    myRFloats = []
-    myIgnores = ["desktop_window"]
-    my1Shifts = ["brave-browser"]
-    my2Shifts = ["Emacs"]
-    my3Shifts = ["Thunar", "ranger"]
-    my4Shifts = []
-    my5Shifts = []
-    my6Shifts = ["tuir"]
-    my7Shifts = ["ncmpcpp"]
-    my8Shifts = ["neomutt"]
-    my9Shifts = ["newsboat"]
-    my10Shifts = []
-
-
-------------------------------------------------------------------------
--- Event handling
-
--- * EwmhDesktops users should change this to ewmhDesktopsEventHook
---
--- Defines a custom handler function for X Events. The function should
--- return (All True) if the default handler is to be run afterwards. To
--- combine event hooks use mappend or mconcat from Data.Monoid.
---
-
-------------------------------------------------------------------------
--- Status bars and logging
-
--- Perform an arbitrary action on each internal state change or X event.
--- See the 'XMonad.Hooks.DynamicLog' extension for examples.
---
-------------------------------------------------------------------------
--- Startup hook
-
--- Perform an arbitrary action each time xmonad starts or is restarted
--- with mod-q.  Used by, e.g., XMonad.Layout.PerWorkspace to initialize
--- per-workspace layout choices.
---
-
-------------------------------------------------------------------------
--- Command to launch the bar.
---myBar = "xmobar $HOME/.config/xmobar/xmobarrc"
-
--- Custom PP, configure it as you like. It determines what is being written to the bar.
---toggleStrutsKey XConfig {XMonad.modMask = modMask} = (modMask, xK_b)
-
-------------------------------------------------------------------------
--- Now run xmonad with all the defaults we set up.
-
--- Run xmonad with the settings you specify. No need to modify this.
---
---main = xmonad =<< myBar myLogHook toggleStrutsKey defaults
-
 main = do
   h <- spawnPipe "xmobar $HOME/.config/xmobar/xmobarrc"
   xmonad $ ewmh def 
@@ -521,56 +498,3 @@ main = do
         ,startupHook        = myStartupHook
     
     }
-
-
--- | Finally, a copy of the default bindings in simple textual tabular format.
-help :: String
-help = unlines ["The default modifier key is 'alt'. Default keybindings:",
-    "",
-    "-- launching and killing programs",
-    "mod-Shift-Enter  Launch xterminal",
-    "mod-p            Launch dmenu",
-    "mod-Shift-p      Launch gmrun",
-    "mod-Shift-c      Close/kill the focused window",
-    "mod-Space        Rotate through the available layout algorithms",
-    "mod-Shift-Space  Reset the layouts on the current workSpace to default",
-    "mod-n            Resize/refresh viewed windows to the correct size",
-    "",
-    "-- move focus up or down the window stack",
-    "mod-Tab        Move focus to the next window",
-    "mod-Shift-Tab  Move focus to the previous window",
-    "mod-j          Move focus to the next window",
-    "mod-k          Move focus to the previous window",
-    "mod-m          Move focus to the master window",
-    "",
-    "-- modifying the window order",
-    "mod-Return   Swap the focused window and the master window",
-    "mod-Shift-j  Swap the focused window with the next window",
-    "mod-Shift-k  Swap the focused window with the previous window",
-    "",
-    "-- resizing the master/slave ratio",
-    "mod-h  Shrink the master area",
-    "mod-l  Expand the master area",
-    "",
-    "-- floating layer support",
-    "mod-t  Push window back into tiling; unfloat and re-tile it",
-    "",
-    "-- increase or decrease number of windows in the master area",
-    "mod-comma  (mod-,)   Increment the number of windows in the master area",
-    "mod-period (mod-.)   Deincrement the number of windows in the master area",
-    "",
-    "-- quit, or restart",
-    "mod-Shift-q  Quit xmonad",
-    "mod-q        Restart xmonad",
-    "mod-[1..9]   Switch to workSpace N",
-    "",
-    "-- Workspaces & screens",
-    "mod-Shift-[1..9]   Move client to workspace N",
-    "mod-{w,e,r}        Switch to physical/Xinerama screens 1, 2, or 3",
-    "mod-Shift-{w,e,r}  Move client to screen 1, 2, or 3",
-    "",
-    "-- Mouse bindings: default actions bound to mouse events",
-    "mod-button1  Set the window to floating mode and move by dragging",
-    "mod-button2  Raise the window to the top of the stack",
-    "mod-button3  Set the window to floating mode and resize by dragging"]
-
