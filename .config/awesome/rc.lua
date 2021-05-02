@@ -1,7 +1,4 @@
--- If LuaRocks is installed, make sure that packages installed through it are
--- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
-
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
@@ -18,30 +15,33 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
--- Widgets
+terminal = "alacritty"
+editor = os.getenv("EDITOR") or "nvim"
+editor_cmd = terminal .. " -e " .. editor
+
+awful.util.terminal = terminal
+-- Default modkey.
+-- Usually, Mod4 is the key with a logo between Control and Alt.
+-- If you do not like this or do not have such a key,
+-- I suggest you to remap Mod4 to another key using xmodmap or other tools.
+-- However, you can use another modifier like Mod1, but it may interact with others.
+local modkey       = "Mod4"
+local altkey       = "Mod1"
+local modkey1      = "Control"
+
 local vicious = require("vicious")
 local mpdarc_widget = require("awesome-wm-widgets.mpdarc-widget.mpdarc")
 local ram_widget = require("awesome-wm-widgets.ram-widget.ram-widget")
 local calendar_widget = require("awesome-wm-widgets.calendar-widget.calendar")
-
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 local cw = calendar_widget()
 
-mytextclock:connect_signal("button::press",
-    function(_, _, _, button)
-                if button == 1 then cw.toggle() end
-                    end)
--- Quake
 local lain = require("lain")
 --local quake = require("utils/quake")
 -- Enabling drop down terminal
 --local scratch = require("scratch")
 
-
--- {{{ Error handling
--- Check if awesome encountered an error during startup and fell back to
--- another config (This code will only ever execute for the fallback config)
 if awesome.startup_errors then
     naughty.notify({ preset = naughty.config.presets.critical,
                      title = "Oops, there were errors during startup!",
@@ -62,10 +62,7 @@ do
         in_error = false
     end)
 end
--- }}}
 
--- {{{ Variable definitions
--- Themes define colours, icons, font and wallpapers.
 local themes = {
     "blackburn",       -- 1
     "copland",         -- 2
@@ -87,59 +84,34 @@ beautiful.init(theme_path)
 
 beautiful.useless_gap = 5
 
-
-
-
--- This is used later as the default terminal and editor to run.
-terminal = "kitty"
-editor = os.getenv("EDITOR") or "nvim"
-editor_cmd = terminal .. " -e " .. editor
-
-awful.util.terminal = terminal
--- Default modkey.
--- Usually, Mod4 is the key with a logo between Control and Alt.
--- If you do not like this or do not have such a key,
--- I suggest you to remap Mod4 to another key using xmodmap or other tools.
--- However, you can use another modifier like Mod1, but it may interact with others.
-local modkey       = "Mod4"
-local altkey       = "Mod1"
-local modkey1      = "Control"
-
--- Compositing
 client.connect_signal("focus", function(c)
                               c.border_color = beautiful.border_focus
                               c.opacity = 0.99
                            end)
 client.connect_signal("unfocus", function(c)
                                 c.border_color = beautiful.border_normal
-                                c.opacity = 0.9
+                                c.opacity = 0.7
                              end)
 
-
-
--- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
     awful.layout.suit.floating,
     awful.layout.suit.tile,
---    awful.layout.suit.tile.left,
---    awful.layout.suit.tile.bottom,
---    awful.layout.suit.tile.top,
---    awful.layout.suit.fair,
---    awful.layout.suit.fair.horizontal,
---    awful.layout.suit.spiral,
+    awful.layout.suit.tile.left,
+    awful.layout.suit.tile.bottom,
+    awful.layout.suit.tile.top,
+    awful.layout.suit.fair,
+    awful.layout.suit.fair.horizontal,
+    awful.layout.suit.spiral,
     awful.layout.suit.spiral.dwindle,
     awful.layout.suit.max,
---    awful.layout.suit.max.fullscreen,
---    awful.layout.suit.magnifier,
---    awful.layout.suit.corner.nw,
+    awful.layout.suit.max.fullscreen,
+    awful.layout.suit.magnifier,
+    awful.layout.suit.corner.nw,
     -- awful.layout.suit.corner.ne,
     -- awful.layout.suit.corner.sw,
     -- awful.layout.suit.corner.se,
 }
--- }}}
 
--- {{{ Menu
--- Create a launcher widget and a main menu
 myawesomemenu = {
    { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
    { "manual", terminal .. " -e man awesome" },
@@ -202,15 +174,12 @@ awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
 awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) end)
     --awful.tag({ "", "", "", "", "5", "6", "7", "", "9"}, s, awful.layout.layouts[1])
 
--- {{{ Mouse bindings
 root.buttons(gears.table.join(
     awful.button({ }, 3, function () mymainmenu:toggle() end),
     awful.button({ }, 4, awful.tag.viewnext),
     awful.button({ }, 5, awful.tag.viewprev)
 ))
--- }}}
 
--- {{{ Key bindings
 globalkeys = gears.table.join(
     awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
               {description="show help", group="awesome"}),
@@ -235,9 +204,9 @@ globalkeys = gears.table.join(
     ),
     awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
               {description = "show main menu", group = "awesome"}),
+--Layout manipulation
 
-    -- Layout manipulation
-    awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
+awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
               {description = "swap with next client by index", group = "client"}),
     awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
               {description = "swap with previous client by index", group = "client"}),
@@ -450,10 +419,7 @@ clientbuttons = gears.table.join(
 
 -- Set keys
 root.keys(globalkeys)
--- }}}
 
--- {{{ Rules
--- Rules to apply to new clients (through the "manage" signal).
 awful.rules.rules = {
     -- All clients will match this rule.
     { rule = { },
@@ -516,18 +482,8 @@ awful.rules.rules = {
      { rule = { class = "Zoom" },
        properties = { screen = 1, tag = "4", switchtotag = true, maximized = true } },
 
-
-
-
-
-
-
-
 }
--- }}}
 
--- {{{ Signals
--- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c)
     -- Set the windows at the slave,
     -- i.e. put it at the end of others instead of setting it master.
@@ -588,21 +544,7 @@ end)
 
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
--- }}}
 
--- Autorun programs
-autorun = true
-autorunApps =
-{
-   "picom",
-   "nm-applet",
-   "nextcloud",
-}
-if autorun then
-   for app = 1, #autorunApps do
-       awful.util.spawn(autorunApps[app])
-   end
- end
-
-
---awful.spawn.with_shell("picom")
+awful.spawn.with_shell("compton")
+awful.spawn.with_shell("nm-applet")
+awful.spawn.with_shell("nextcloud")
