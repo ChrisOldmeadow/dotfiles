@@ -7,36 +7,23 @@ The configuration files for all the programs I use. I try to follow the xdg-conf
 * Table of Contents :toc:
 - [[#about][About]]
 - [[#window-managers][Window Managers]]
-  - [[#dwm][DWM]]
-  - [[#xmonad][Xmonad]]
-  - [[#awesome][Awesome]]
 - [[#text-editors][Text editors]]
   - [[#neovim][Neovim]]
   - [[#emacs][Emacs]]
 - [[#statistical-programing][Statistical programing]]
 - [[#music][Music]]
-  - [[#mpd][MPD]]
-  - [[#mopidy][Mopidy]]
-  - [[#ncmpcpp][NCMPCPP]]
-  - [[#beets][Beets]]
-  - [[#mpdscribble][mpdscribble]]
 - [[#mail][Mail]]
-  - [[#neomutt][Neomutt]]
 - [[#terminals][Terminals]]
-  - [[#kitty][Kitty]]
 - [[#shells][Shells]]
-  - [[#zsh][Zsh]]
-  - [[#bash][Bash]]
 - [[#other][Other]]
-  - [[#file-manger-ranger][File manger (Ranger)]]
 
 * Window Managers
 
 Im a big fan of dynamic tiling window managers, they are fast, reliable, minimal and highly configurable. I particularly enjoy tinkering with WMs that are written and configured in the same language, as it give me a chance to learn new  and interesting languages.
 
-** DWM
-** Xmonad
-** Awesome
+WM
+ Xmonad
+ Awesome
 
 * Text editors
 
@@ -53,22 +40,22 @@ I mainly use R, but at work I also use Stata and SAS if required
 
 * Music
 
-** MPD
-** Mopidy
-** NCMPCPP
-** Beets
-** mpdscribble
+- MPD
+- Mopidy
+- NCMPCPP
+- Beets
+- mpdscribble
 
 * Mail
-** Neomutt
+- Neomutt
 
 
 * Terminals
-** Kitty
+- Kitty
 
 * Shells
-** Zsh
-** Bash
+- Zsh
+- Bash
 
 * Other
-** File manger (Ranger)
+- File manger (Ranger)
