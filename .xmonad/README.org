@@ -8,6 +8,40 @@ Xmonad is a tiling window manager written and configured in **Haskell**.
 Haskell is a fast and reliable functional programming language. The syntax can be a little confusing, but there is a great tutorial explaining the sytax (in regards to Xmonad configs) at
 [https://github.com/xmonad/xmonad/blob/75ac826b9623421a0e4ce4389ffc603c4b9e3fb3/tutorial.md]
 
+
+This configuration of xmonad has the following requirements:
+- xmobar
+- xdotool (for clickable workspaces)
+- xmonad-contrib
+- trayer
+
+
+
+And these programs are spawned on entering xmonad
+- picom
+- nm-applet
+- volumeicon
+- nextcloud
+- trayer
+- feh
+
+
+I also have quick-launch keybindings for
+- kitty
+- newsboat
+- neomutt
+- emacs
+- brave
+- rofi
+- rofi-pass
+- rofi-calc
+- ranger
+- ncmpcpp
+
+
+
+
+
 * Table of contents :toc:
 - [[#about][About]]
 - [[#importing-libraries][Importing libraries]]
