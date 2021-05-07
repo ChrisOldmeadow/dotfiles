@@ -69,13 +69,8 @@ myBorderWidth   = 1
 --
 myModMask = mod4Mask
 
-
-
 windowCount :: X (Maybe String)
 windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace . W.current . windowset
-
-
-
 
 -- The default number of workspaces (virtual screens) and their names.
 -- By default we use numeric strings, but any string may be used as a
@@ -100,7 +95,7 @@ myFocusedBorderColor = "#ff0000"
 -- Startup programs
 myStartupHook :: X ()
 myStartupHook = do
-    spawnOnce "picom --config $HOME/.xmonad/scripts/picom.conf &"
+    spawnOnce "picom --config $HOME/.confg/picom/picom.conf &"
     spawnOnce "nm-applet &"
     spawnOnce "volumeicon &"
     spawnOnce "nextcloud &"
@@ -125,7 +120,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask .|. shiftMask , xK_r ), spawn $ "xmonad --recompile && xmonad --restart")
   , ((modMask .|. shiftMask , xK_c ), kill)
   , ((modMask .|. shiftMask , xK_q ), io (exitWith ExitSuccess))
-  , ((modMask .|. shiftMask , xK_x), spawn $ "arcolinux-logout" )
 
   -- CONTROL + ALT KEYS
 
@@ -208,17 +202,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- Swap the focused window with the previous window.
   , ((modMask .|. shiftMask, xK_k), windows W.swapUp    )
 
-  -- Swap the focused window with the previous window.
-  , ((controlMask .|. modMask, xK_Up), windows W.swapUp  )
-
   -- Shrink the master area.
-  , ((controlMask .|. shiftMask , xK_h), sendMessage Shrink)
+  , ((modMask .|. shiftMask , xK_h), sendMessage Shrink)
 
   -- Expand the master area.
-  , ((controlMask .|. shiftMask , xK_l), sendMessage Expand)
+  , ((modMask .|. shiftMask , xK_l), sendMessage Expand)
 
   -- Push window back into tiling.
-  , ((controlMask .|. shiftMask , xK_t), withFocused $ windows . W.sink)
+  , ((modMask .|. shiftMask , xK_t), withFocused $ windows . W.sink)
 
   -- Increment the number of windows in the master area.
   , ((controlMask .|. modMask, xK_Left), sendMessage (IncMasterN 1))
@@ -232,17 +223,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- mod-[1..9], Switch to workspace N
   -- mod-shift-[1..9], Move client to workspace N
   [((m .|. modMask, k), windows $ f i)
-
   --Keyboard layouts
   --qwerty users use this line
    | (i, k) <- zip (XMonad.workspaces conf) [xK_1,xK_2,xK_3,xK_4,xK_5,xK_6,xK_7,xK_8,xK_9,xK_0]
-
-  --French Azerty users use this line
-  -- | (i, k) <- zip (XMonad.workspaces conf) [xK_ampersand, xK_eacute, xK_quotedbl, xK_apostrophe, xK_parenleft, xK_minus, xK_egrave, xK_underscore, xK_ccedilla , xK_agrave]
-
-  --Belgian Azerty users use this line
-  -- | (i, k) <- zip (XMonad.workspaces conf) [xK_ampersand, xK_eacute, xK_quotedbl, xK_apostrophe, xK_parenleft, xK_section, xK_egrave, xK_exclam, xK_ccedilla, xK_agrave]
-
       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)
       , (\i -> W.greedyView i . W.shift i, shiftMask)]]
 
@@ -454,8 +437,10 @@ main = do
         handleEventHook    = docksEventHook,
         logHook            = dynamicLogWithPP  $ xmobarPP
                                     {ppOutput = hPutStrLn h 
-                                     ,ppCurrent = xmobarColor "#98be65" "" . wrap "[" "]"
+                                     , ppCurrent = xmobarColor "#98be65" "" . wrap "[" "]"
                                      , ppVisible = xmobarColor "#98be65" "" . clickable
+                                     , ppHidden = xmobarColor "#82AAFF" "" . wrap "*" "" . clickable -- Hidden workspaces
+                                     , ppHiddenNoWindows = xmobarColor "#c792ea" ""  . clickable   
                                      , ppTitle = xmobarColor "#b3afc2" "". shorten 60
                                      , ppSep =  "<fc=#666666> <fn=1>|</fn> </fc>"
                                      , ppExtras  = [windowCount]
