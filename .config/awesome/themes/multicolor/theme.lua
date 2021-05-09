@@ -269,9 +269,9 @@ local taglist_buttons = gears.table.join(
 
 function theme.at_screen_connect(s)
     -- Quake application
-    s.quake = lain.util.quake({ app = "alacritty",
+    s.quake = lain.util.quake({ app = "kitty",
                               argname = "--title %s",
-                              extra = "--class QuakeDD -e tmux",
+                              extra = "--class QuakeDD",
                               visible = true,
                               horiz = "center",
                               width = 0.5, 
