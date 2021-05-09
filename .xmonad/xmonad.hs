@@ -102,34 +102,42 @@ myStartupHook = do
     spawnOnce "trayer --edge top --align right --widthtype request --padding 6 --SetDockType true --SetPartialStrut true --expand true --monitor 1 --transparent true --alpha 0 --tint 0x282c34  --height 22 &"
     spawnOnce "feh --bg-fill --randomize /data/Pictures/wallpapers/* &"
 
-myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
-  [
+myKeys conf@(XConfig { XMonad.modMask = modMask }) =
+  M.fromList
+    $  [
 --  , (("M-<Space>", sendMessage (MT.Toggle NBFULL) >> sendMessage ToggleStruts) -- Toggles noborder/full
-   ((modMask, xK_v), spawn $ "pavucontrol" )
-  , ((modMask, xK_Return), spawn $ myTerminal )
-  , ((modMask, xK_r), spawn $ "rofi -show run" )
-  , ((modMask, xK_p), spawn $ "rofi-pass" )
-  , ((modMask, xK_c), spawn $ "rofi -show calc -modi calc -no-show-match -no-sort" )
-  , ((modMask, xK_f), spawn $ "feh --bg-fill --randomize /data/Pictures/wallpapers/*" )
+         ((modMask, xK_v)     , spawn $ "pavucontrol")
+       , ((modMask, xK_Return), spawn $ myTerminal)
+       , ((modMask, xK_r)     , spawn $ "rofi -show run")
+       , ((modMask, xK_p)     , spawn $ "rofi-pass")
+       , ( (modMask, xK_c)
+         , spawn $ "rofi -show calc -modi calc -no-show-match -no-sort"
+         )
+       , ( (modMask, xK_f)
+         , spawn $ "feh --bg-fill --randomize /data/Pictures/wallpapers/*"
+         )
 
   -- FUNCTION KEYS
 
   -- SUPER + SHIFT KEYS
-
-  , ((modMask .|. shiftMask , xK_Return ), spawn $ "thunar")
-  , ((modMask .|. shiftMask , xK_r ), spawn $ "xmonad --recompile && xmonad --restart")
-  , ((modMask .|. shiftMask , xK_c ), kill)
-  , ((modMask .|. shiftMask , xK_q ), io (exitWith ExitSuccess))
+       , ((modMask .|. shiftMask, xK_Return), spawn $ "thunar")
+       , ( (modMask .|. shiftMask, xK_r)
+         , spawn $ "xmonad --recompile && xmonad --restart"
+         )
+       , ((modMask .|. shiftMask, xK_c), kill)
+       , ((modMask .|. shiftMask, xK_q), io (exitWith ExitSuccess))
 
   -- CONTROL + ALT KEYS
 
   -- ALT + ... KEYS
-  , ((modMask .|. mod1Mask , xK_n ), spawn $ "kitty --class newsboat newsboat")
-  , ((modMask .|. mod1Mask , xK_m ), spawn $ "kitty --class neomutt neomutt")
-  , ((modMask .|. mod1Mask , xK_t ), spawn $ "kitty --class ncmpcpp ncmpcpp")
-  , ((modMask .|. mod1Mask , xK_r ), spawn $ "kitty --class ranger ranger")
-  , ((modMask .|. mod1Mask , xK_e ), spawn $ "emacs")
-  , ((modMask .|. mod1Mask , xK_b ), spawn $ "brave")
+       , ( (modMask .|. mod1Mask, xK_n)
+         , spawn $ "kitty --class newsboat newsboat"
+         )
+       , ((modMask .|. mod1Mask, xK_m), spawn $ "kitty --class neomutt neomutt")
+       , ((modMask .|. mod1Mask, xK_t), spawn $ "kitty --class ncmpcpp ncmpcpp")
+       , ((modMask .|. mod1Mask, xK_r), spawn $ "kitty --class ranger ranger")
+       , ((modMask .|. mod1Mask, xK_e)       , spawn $ "emacs")
+       , ((modMask .|. mod1Mask, xK_b)       , spawn $ "brave")
   --CONTROL + SHIFT KEYS
 
 
@@ -138,36 +146,34 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   --MULTIMEDIA KEYS
 
   -- Mute volume
-  , ((0, xF86XK_AudioMute), spawn $ "amixer -q set Master toggle")
+       , ((0, xF86XK_AudioMute), spawn $ "amixer -q set Master toggle")
 
   -- Decrease volume
-  , ((0, xF86XK_AudioLowerVolume), spawn $ "amixer -q set Master 5%-")
+       , ((0, xF86XK_AudioLowerVolume), spawn $ "amixer -q set Master 5%-")
 
   -- Increase volume
-  , ((0, xF86XK_AudioRaiseVolume), spawn $ "amixer -q set Master 5%+")
+       , ((0, xF86XK_AudioRaiseVolume), spawn $ "amixer -q set Master 5%+")
 
   -- Increase brightness
-  , ((0, xF86XK_MonBrightnessUp),  spawn $ "xbacklight -inc 5")
+       , ((0, xF86XK_MonBrightnessUp)        , spawn $ "xbacklight -inc 5")
 
   -- Decrease brightness
-  , ((0, xF86XK_MonBrightnessDown), spawn $ "xbacklight -dec 5")
+       , ((0, xF86XK_MonBrightnessDown)      , spawn $ "xbacklight -dec 5")
 
 --  , ((0, xF86XK_AudioPlay), spawn $ "mpc toggle")
 --  , ((0, xF86XK_AudioNext), spawn $ "mpc next")
 --  , ((0, xF86XK_AudioPrev), spawn $ "mpc prev")
 --  , ((0, xF86XK_AudioStop), spawn $ "mpc stop")
-
-  , ((0, xF86XK_AudioPlay), spawn $ "playerctl play-pause")
-  , ((0, xF86XK_AudioNext), spawn $ "playerctl next")
-  , ((0, xF86XK_AudioPrev), spawn $ "playerctl previous")
-  , ((0, xF86XK_AudioStop), spawn $ "playerctl stop")
+       , ((0, xF86XK_AudioPlay)              , spawn $ "mpc toggle")
+       , ((0, xF86XK_AudioNext)              , spawn $ "mpc next")
+       , ((0, xF86XK_AudioPrev)              , spawn $ "mpc previous")
 
 
   --------------------------------------------------------------------
   --  XMONAD LAYOUT KEYS
 
   -- Cycle through the available layout algorithms.
-  , ((modMask, xK_space), sendMessage NextLayout)
+       , ((modMask, xK_space)                , sendMessage NextLayout)
 
   --Focus selected desktop
 --  , ((mod1Mask, xK_Tab), nextWS)
@@ -182,72 +188,81 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   --, ((controlMask .|. mod1Mask , xK_Right ), nextWS)
 
   --  Reset the layouts on the current workspace to default.
-  , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
+       , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
 
   -- Move focus to the next window.
-  , ((modMask, xK_j), windows W.focusDown)
+       , ((modMask, xK_j)                    , windows W.focusDown)
 
   -- Move focus to the previous window.
-  , ((modMask, xK_k), windows W.focusUp  )
+       , ((modMask, xK_k)                    , windows W.focusUp)
 
   -- Move focus to the master window.
-  , ((modMask .|. shiftMask, xK_m), windows W.focusMaster  )
+       , ((modMask .|. shiftMask, xK_m)      , windows W.focusMaster)
 
   -- Swap the focused window with the next window.
-  , ((modMask .|. shiftMask, xK_j), windows W.swapDown  )
+       , ((modMask .|. shiftMask, xK_j)      , windows W.swapDown)
 
   -- Swap the focused window with the next window.
-  , ((controlMask .|. modMask, xK_Down), windows W.swapDown  )
+       , ((controlMask .|. modMask, xK_Down) , windows W.swapDown)
 
   -- Swap the focused window with the previous window.
-  , ((modMask .|. shiftMask, xK_k), windows W.swapUp    )
+       , ((modMask .|. shiftMask, xK_k)      , windows W.swapUp)
 
   -- Shrink the master area.
-  , ((modMask .|. shiftMask , xK_h), sendMessage Shrink)
+       , ((modMask .|. shiftMask, xK_h)      , sendMessage Shrink)
 
   -- Expand the master area.
-  , ((modMask .|. shiftMask , xK_l), sendMessage Expand)
+       , ((modMask .|. shiftMask, xK_l)      , sendMessage Expand)
 
   -- Push window back into tiling.
-  , ((modMask .|. shiftMask , xK_t), withFocused $ windows . W.sink)
+       , ((modMask .|. shiftMask, xK_t)      , withFocused $ windows . W.sink)
 
   -- Increment the number of windows in the master area.
-  , ((controlMask .|. modMask, xK_Left), sendMessage (IncMasterN 1))
+       , ((controlMask .|. modMask, xK_Left) , sendMessage (IncMasterN 1))
 
   -- Decrement the number of windows in the master area.
-  , ((controlMask .|. modMask, xK_Right), sendMessage (IncMasterN (-1)))
-
-  ]
-  ++
+       , ((controlMask .|. modMask, xK_Right), sendMessage (IncMasterN (-1)))
+       ]
+    ++
 
   -- mod-[1..9], Switch to workspace N
   -- mod-shift-[1..9], Move client to workspace N
-  [((m .|. modMask, k), windows $ f i)
+       [ ((m .|. modMask, k), windows $ f i)
   --Keyboard layouts
   --qwerty users use this line
-   | (i, k) <- zip (XMonad.workspaces conf) [xK_1,xK_2,xK_3,xK_4,xK_5,xK_6,xK_7,xK_8,xK_9,xK_0]
-      , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)
-      , (\i -> W.greedyView i . W.shift i, shiftMask)]]
+       | (i, k) <- zip
+         (XMonad.workspaces conf)
+         [xK_1, xK_2, xK_3, xK_4, xK_5, xK_6, xK_7, xK_8, xK_9, xK_0]
+       , (f, m) <-
+         [ (W.greedyView                    , 0)
+         , (W.shift                         , shiftMask)
+         , (\i -> W.greedyView i . W.shift i, shiftMask)
+         ]
+       ]
 
 
 ------------------------------------------------------------------------
 -- Mouse bindings: default actions bound to mouse events
 --
-myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
+myMouseBindings (XConfig { XMonad.modMask = modm }) =
+  M.fromList
+    $
 
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modm, button1), (\w -> focus w >> mouseMoveWindow w
-                                       >> windows W.shiftMaster))
+      [ ( (modm, button1)
+        , (\w -> focus w >> mouseMoveWindow w >> windows W.shiftMaster)
+        )
 
     -- mod-button2, Raise the window to the top of the stack
-    , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
+      , ((modm, button2), (\w -> focus w >> windows W.shiftMaster))
 
     -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
-                                       >> windows W.shiftMaster))
+      , ( (modm, button3)
+        , (\w -> focus w >> mouseResizeWindow w >> windows W.shiftMaster)
+        )
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
-    ]
+      ]
 
 mySpacing :: Integer -> l a -> XMonad.Layout.LayoutModifier.ModifiedLayout Spacing l a
 mySpacing i = spacingRaw False (Border i i i i) True (Border i i i i) True
