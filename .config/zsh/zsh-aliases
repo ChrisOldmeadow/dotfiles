@@ -59,7 +59,7 @@ alias ls="exa -la --color=always --group-directories-first"
 #alias vim=nvim
 alias mutt=neomutt
 alias sr="surfraw -browser=w3m"
-alias config="git --git-dir=/home/chris/dotfiles --work-tree=/home/chris"
+alias config="git --git-dir=$HOME/dotfiles --work-tree=$HOME"
 
 # ncmpcpp() {
 #     if ! pidof "$(type -P mpd)" >/dev/null; then
