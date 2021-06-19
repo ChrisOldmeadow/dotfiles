@@ -1,0 +1,45 @@
+theme = "solarized-dark"
+icons = "awesome"
+
+[[block]]
+block = "disk_space"
+path = "/"
+alias = "/"
+info_type = "available"
+unit = "GB"
+interval = 20
+warning = 20.0
+alert = 10.0
+
+
+[[block]]
+block = "cpu"
+interval = 1
+
+[[block]]
+block = "memory"
+format_mem = "{Mug}GB/{MTg}GB"
+
+[[block]]
+block = "maildir"
+interval = 60
+inboxes = ["/data/Mail/INBOX"]
+threshold_warning = 1
+threshold_critical = 10
+display_type = "new"
+
+[[block]]
+block = "music"
+player = "org.mpris.MediaPlayer2.mpd"
+buttons = ["play", "next"]
+
+[[block]]
+block = "sound"
+
+
+
+[[block]]
+block = "time"
+interval = 60
+format = "%a %d/%m %R"
+

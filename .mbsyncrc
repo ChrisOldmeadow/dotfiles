@@ -1,0 +1,27 @@
+IMAPAccount Work
+Host localhost
+Port 1143
+User coldmeadow@hmri.org.au
+PassCmd "pass hmri.org.au/coldmeadow"
+SSLType none
+SSLVersion SSLv3
+PipelineDepth 1
+AuthMechs LOGIN
+
+
+
+IMAPStore Work-remote
+Account Work
+
+MaildirStore Work-local 
+Path /data/Mail/
+Inbox /data/Mail/INBOX 
+
+Channel Work
+Far :Work-remote:
+Near :Work-local:
+Create Both
+Patterns "INBOX"
+Patterns "ARCHIVE/2021"
+Sync All
+SyncState *

@@ -87,3 +87,5 @@ setopt share_history # share command history data
 
 [ $TERM = "dumb" ] && unsetopt zle && PS1='$ '
 
+
+export GPG_AGENT_INFO=$HOME/.gnupg/gpg-agent.conf

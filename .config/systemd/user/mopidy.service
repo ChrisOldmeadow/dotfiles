@@ -1,9 +1,0 @@
-[Unit]
-Description=Music Player Daemon
-
-[Service]
-ExecStart=/usr/bin/mopidy 
-
-[Install]
-WantedBy=default.target
-

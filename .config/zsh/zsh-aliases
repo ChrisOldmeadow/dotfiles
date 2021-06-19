@@ -76,3 +76,7 @@ alias config="git --git-dir=$HOME/dotfiles --work-tree=$HOME"
 
 
 alias pushweb="rsync -rvhu $HOME/web/chrisoldmeadow.xyz/ www.chrisoldmeadow.xyz:~/chrisoldmeadow"
+
+alias d="kitty +kitten diff"
+
+alias tlmgr="/usr/share/texmf-dist/scripts/texlive/tlmgr.pl --usermode"
