@@ -21,9 +21,10 @@ The configuration files for all the programs I use. I try to follow the xdg-conf
 
 Im a big fan of dynamic tiling window managers, they are fast, reliable, minimal and highly configurable. I particularly enjoy tinkering with WMs that are written and configured in the same language, as it give me a chance to learn new  and interesting languages.
 
-WM
- Xmonad
- Awesome
+ + Xmonad
+ + Awesome
+ + i3
+ + dwm
 
 * Text editors
 
