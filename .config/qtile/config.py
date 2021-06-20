@@ -5,7 +5,7 @@ import socket
 import subprocess
 
 from libqtile import bar, hook, layout, qtile
-from libqtile.config import Click, Drag, Group, Key, Screen
+from libqtile.config import Click, Drag, Group, Key, Screen, DropDown, ScratchPad
 from libqtile.lazy import lazy
 from libqtile.log_utils import logger
 from libqtile.widget import (Battery, Clock, CurrentLayout, CurrentLayoutIcon,
@@ -13,7 +13,7 @@ from libqtile.widget import (Battery, Clock, CurrentLayout, CurrentLayoutIcon,
                              Spacer, Systray, TaskList, TextBox, Memory, Mpd2,
                              Image)
 
-
+   #     from libqtile.config import 
 DEBUG = os.environ.get("DEBUG")
 
 GREY = "#222222"
@@ -156,13 +156,13 @@ def init_keys():
         Key([], "Scroll_Lock", lazy.spawn(screenlocker)),
         
     ]
-    if DEBUG:
-        keys += [
-            Key([mod], "Tab", lazy.layout.next()),
-            Key([mod, "shift"], "Tab", lazy.layout.previous()),
-            Key([mod, "shift"], "f", lazy.layout.flip()),
-            Key([mod], "y", lazy.group["scratch"].dropdown_toggle("term"))
-        ]
+   # if DEBUG:
+    keys += [
+        Key([mod], "Tab", lazy.layout.next()),
+        Key([mod, "shift"], "Tab", lazy.layout.previous()),
+        Key([mod, "shift"], "f", lazy.layout.flip()),
+        Key([mod], "y", lazy.group["scratch"].dropdown_toggle("term"))
+    ]
     return keys
 
 
@@ -189,12 +189,12 @@ def init_groups():
     groups += [("0", "10"), ("minus", "11"), ("equal", "12")]
     groups = [_inner(*i) for i in groups]
 
-    if DEBUG:
-        from libqtile.config import DropDown, ScratchPad
-        dropdowns = [DropDown("term", terminal, x=0.125, y=0.25,
+   # if DEBUG:
+   #     from libqtile.config import DropDown, ScratchPad
+    dropdowns = [DropDown("term", terminal, x=0.125, y=0.25,
                               width=0.75, height=0.5, opacity=0.8,
                               on_focus_lost_hide=True)]
-        groups.append(ScratchPad("scratch", dropdowns))
+    groups.append(ScratchPad("scratch", dropdowns))
     return groups
 
 
