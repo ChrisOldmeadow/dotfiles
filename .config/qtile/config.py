@@ -274,10 +274,17 @@ def init_widgets_list():
                        padding = 0,
                        fontsize = 37
                        ),
+            widget.TextBox(
+                      text = '🎵',
+                       foreground = colors[0],
+                       background = colors[4],
+                       padding = 0
+                       ),
              widget.Mpd(
                        foreground = colors[2],
                        background = colors[4],
-                       padding = 5
+                       padding = 5,
+                       fmt_playing = ' %a - %t [%v%%]'
                        ),
               widget.TextBox(
                        text='',
@@ -291,7 +298,7 @@ def init_widgets_list():
                        background = colors[5],
                        padding = 5,
                        maildir_path = '/data/Mail/',
-                       sub_folders = [{"path": "INBOX", "label": "Work"}],
+                       sub_folders = [{"path": "INBOX", "label": " "}],
                        update_interval = 60
                        ),
               widget.TextBox(
@@ -301,6 +308,13 @@ def init_widgets_list():
                        padding = 0,
                        fontsize = 37
                        ),
+              widget.TextBox(
+                      text = '🧠',
+                       foreground = colors[0],
+                       background = colors[4],
+                       padding = 0
+                       ),
+
              widget.Memory(
                        foreground = colors[2],
                        background = colors[4],
@@ -315,7 +329,7 @@ def init_widgets_list():
                        fontsize = 37
                        ),
              widget.TextBox(
-                      text = " Vol:",
+                      text = ":",
                        foreground = colors[2],
                        background = colors[5],
                        padding = 0
@@ -351,6 +365,12 @@ def init_widgets_list():
                        padding = 0,
                        fontsize = 37
                        ),
+              widget.TextBox(
+                      text = "",
+                      foreground = colors[2],
+                      background = colors[5],
+                      padding = 0
+                      ),
               widget.Clock(
                        foreground = colors[2],
                        background = colors[5],
