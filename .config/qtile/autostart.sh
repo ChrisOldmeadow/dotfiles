@@ -1,7 +1,6 @@
 #!/usr/bin/bash 
 
 picom &
-volumeicon &
 nm-applet &
 nextcloud &
 davamil davmail.properties &
